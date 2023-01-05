@@ -1,0 +1,11 @@
+Model Information:
+* title:	Classic Mazda Miata Cabriolet | Low Poly
+* source:	https://sketchfab.com/3d-models/classic-mazda-miata-cabriolet-low-poly-8bda7836f6514196b7b2fcf32c26d519
+* author:	SentientSundae (https://sketchfab.com/SentientSundae)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Classic Mazda Miata Cabriolet | Low Poly" (https://sketchfab.com/3d-models/classic-mazda-miata-cabriolet-low-poly-8bda7836f6514196b7b2fcf32c26d519) by SentientSundae (https://sketchfab.com/SentientSundae) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
