@@ -1,6 +1,5 @@
 ﻿public enum InputTypes
 {
-    LogitechWheel,
-    Controller,
+    Wheel,
     Keyboard
 }

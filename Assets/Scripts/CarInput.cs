@@ -6,14 +6,21 @@ using UnityEngine;
 
 public class CarInput : MonoBehaviour
 {
-    public InputTypes inputType = InputTypes.LogitechWheel;
+    public InputTypes inputType = InputTypes.Wheel;
     public int steeringLock = 450;
+    public int wheeloffset = 30;
     public GameObject steeringWheel;
-    public Shifter shifter;
+    public Gearbox shifter;
     
+    public int steeringValue = 0;
+    public int gasAxis = 0;
+    public int brakeAxis = 0;
+    public bool clutchPressed = false;
+    public bool blinkLeft = false;
+    public bool blinkRight = false;
     
     private string _debugState = "";
-
+    private string _deviceName = "";
 
     void Start()
     {
@@ -28,25 +35,20 @@ public class CarInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        string deviceName = "";
-        int steeringValue = 0;
-        int gasAxis = 0;
-        int brakeAxis = 0;
-        bool clutchPressed = false;
-        bool blinkLeft = false, blinkRight = false;
-
-        if (false && LogitechGSDK.LogiUpdate() && LogitechGSDK.LogiIsConnected(0))
+        
+        if ((inputType == InputTypes.Wheel) && LogitechGSDK.LogiUpdate() && LogitechGSDK.LogiIsConnected(0))
         {
             var builder = new StringBuilder(256);
             LogitechGSDK.LogiGetFriendlyProductName(0, builder, 256);
-
+            _deviceName = builder.ToString();
+            
             LogitechGSDK.DIJOYSTATE2ENGINES rec;
             rec = LogitechGSDK.LogiGetStateUnity(0);
 
             // Check Steering
             {
                 // X-Axis pos -32767 -> +32768 (Full Lock)
-                steeringValue = map(rec.lX, -32768, 32767, -steeringLock, steeringLock);
+                steeringValue = Map(rec.lX, -32768, 32767, -steeringLock, steeringLock);
             }
         
             // Pedals
@@ -55,13 +57,13 @@ public class CarInput : MonoBehaviour
                 // Y-Axis pos
                 // +32767 = 0%
                 // -32768 = 100%
-                gasAxis = map(-rec.lY, -32768, 32767, 0, 100);
+                gasAxis = Map(-rec.lY, -32768, 32767, 0, 100);
                 
                 // Brake
                 // Z-Axis rotation
                 // +32767 = 0%
                 // -32768 = 100%
-                brakeAxis = map(-rec.lRz, -32768, 32767, 0, 100);
+                brakeAxis = Map(-rec.lRz, -32768, 32767, 0, 100);
                 
                 // Clutch
                 // Extra Axis pos 1
@@ -111,6 +113,7 @@ public class CarInput : MonoBehaviour
         }
         else
         {
+            _deviceName   = "Fallback";
             steeringValue = Convert.ToInt32(Input.GetAxis("Steering") * 450);
             gasAxis       = Convert.ToInt32(Input.GetAxis("Gas") * 100);
             brakeAxis     = Convert.ToInt32(Input.GetAxis("Brake") * 100);
@@ -148,176 +151,28 @@ public class CarInput : MonoBehaviour
                 shifter.setGear(Gear.GearN);
             }
         }
-        /*
-        {
-            //Gamepad Fallback
-            
-            // Check Steering
-            {
-                // X-Axis pos -32767 -> +32768 (Full Lock)
-            }
-        
-            // Pedals
-            {
-                // Gas / Brake
-                // Z-Axis pos
-                // 0 = nothing pressed
-                // 32640 = Full brake
-                // -32640 = Full send
-                gasAxis = 0;
-                brakeAxis = 0;
-            
-                // Clutch
-                // Button 0 (A)
-                clutchPressed = rec.rgbButtons[0] == 128;
-            }
-        
-            // Check Shifting
-            {
-                // Clutch
-                // Button 4/5 (Bumper Left(down) / Right(up))
-                if (rec.rgbButtons[4] == 128)
-                {
-                    shifter.setGear(shifter.getCurrentGear().PreviousGear());
-                } 
-                else if (rec.rgbButtons[5] == 128)
-                {
-                    shifter.setGear(shifter.getCurrentGear().NextGear());
-                }
-            }
-        
-            // Check Blinker
-            {
-                // btn 2(X) = left
-                blinkLeft = rec.rgbButtons[2] == 128;
-                // btn 1(B) = right
-                blinkRight = rec.rgbButtons[1] == 128;
-
-            }
-        }
-        */
+      
         var rotation = Vector3.zero;
-        rotation.x = steeringValue;
+        rotation.x = steeringValue + wheeloffset;
         rotation.y = 0;
         rotation.z = 0;
         steeringWheel.transform.eulerAngles = rotation;
+        
+    }
 
-        _debugState = $"Device: {deviceName}\n";
+    private void OnGUI()
+    {
+        _debugState = $"Device: {_deviceName}\n";
         _debugState += $"Steering: {steeringValue}\n";
         _debugState += $"Gas: {gasAxis}\n";
         _debugState += $"Brake: {brakeAxis}\n";
         _debugState += $"Clutch: {clutchPressed}\n";
         _debugState += $"Blinker Left: {blinkLeft}\n";
         _debugState += $"Blinker Right: {blinkRight}\n";
-
-    }
-
-    private void OnGUI()
-    {
         _debugState = GUI.TextArea(new Rect(10, 10, 180, 200), _debugState, 400);
     }
 
-    private void HandleWheelInput()
-    {
-        if (!LogitechGSDK.LogiUpdate() || !LogitechGSDK.LogiIsConnected(0)) return;
-        
-        LogitechGSDK.DIJOYSTATE2ENGINES rec;
-        rec = LogitechGSDK.LogiGetStateUnity(0);
-        
-
-
-    }
-
-    private void HandleKeyboardInput()
-    {
-        // Check Steering
-        {
-            var SteeringInput = Input.GetAxis("Horizontal");
-        }
-        
-        // Pedals
-        {            
-            var PedalInput = Input.GetAxis("Vertical");
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                
-            }
-        }
-        
-        // Check Shifting
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                
-            } else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                
-            } else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                
-            } else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                
-            } else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                
-            } else if (Input.GetKeyDown(KeyCode.N))
-            {
-                
-            } else if (Input.GetKeyDown(KeyCode.R))
-            {
-                
-            }
-        }
-        
-        // Check Blinker
-        {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                
-            }            
-            
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                
-            }
-        }
-    }
-
-    private void HandleGamepadInput()
-    {
-        var SteeringInput = Input.GetAxis("Horizontal");
-        var PedalInput = Input.GetAxis("Vertical");
-        
-        Debug.Log("L/R:"+SteeringInput);
-        Debug.Log("U/D:"+PedalInput);
-        // Check Steering
-        {
-        }
-        
-        // Pedals
-        {            
-            
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                
-            }
-        }
-        
-        // Check Shifting
-        {
-
-        }
-        
-        // Check Blinker
-        {
-
-        }
-    }
-    
-    private static int map(int value, int fromLow, int fromHigh, int toLow, int toHigh) 
+    private static int Map(int value, int fromLow, int fromHigh, int toLow, int toHigh) 
     {
         return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Car : MonoBehaviour
 {
     public Engine engine;
-    public Shifter shifter;
+    public Gearbox gearbox;
     
     // Start is called before the first frame update
     void Start()

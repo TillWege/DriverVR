@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shifter : MonoBehaviour
+public class Gearbox : MonoBehaviour
 {
     public GameObject gear1, gear2, gear3, gear4, gear5, gearR, gearN;
     private Gear currentGear = Gear.GearN;
