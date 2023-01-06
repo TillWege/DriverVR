@@ -131,12 +131,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2369863310950900297, guid: 1c199765dd03842498795bdf7b028444, type: 3}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2369863310950900297, guid: 1c199765dd03842498795bdf7b028444, type: 3}
       propertyPath: shifter
       value: 
       objectReference: {fileID: 1892213192}
     - target: {fileID: 2369863310950900297, guid: 1c199765dd03842498795bdf7b028444, type: 3}
       propertyPath: inputType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2706764459698095178, guid: 1c199765dd03842498795bdf7b028444, type: 3}
       propertyPath: m_RootOrder
@@ -211,13 +215,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3998653616103541636, guid: 1c199765dd03842498795bdf7b028444, type: 3}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3998653616103541636, guid: 1c199765dd03842498795bdf7b028444, type: 3}
       propertyPath: gearbox
       value: 
       objectReference: {fileID: 1892213192}
+    - target: {fileID: 4430305908179653465, guid: 1c199765dd03842498795bdf7b028444, type: 3}
+      propertyPath: Priority
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4635058300584413928, guid: 1c199765dd03842498795bdf7b028444, type: 3}
       propertyPath: m_Name
       value: Car
       objectReference: {fileID: 0}
+    - target: {fileID: 7705822898644503783, guid: 1c199765dd03842498795bdf7b028444, type: 3}
+      propertyPath: idle
+      value: 
+      objectReference: {fileID: 8300000, guid: 3e89580a89b6680478aabe755b7b3eea, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c199765dd03842498795bdf7b028444, type: 3}
 --- !u!1 &593532783
@@ -428,7 +444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1382263731
 MonoBehaviour:
   m_ObjectHideFlags: 0

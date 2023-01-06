@@ -6,11 +6,13 @@ using UnityEngine;
 
 public class CarInput : MonoBehaviour
 {
+    public bool debug = false;
     public InputTypes inputType = InputTypes.Wheel;
     public int steeringLock = 450;
     public int wheeloffset = 30;
     public GameObject steeringWheel;
     public Gearbox shifter;
+    public Engine engine;
     
     public int steeringValue = 0;
     public int gasAxis = 0;
@@ -110,6 +112,14 @@ public class CarInput : MonoBehaviour
                 blinkRight = rec.rgbButtons[6] == 128;
             }
             
+            // Start-Button
+            {
+                if (rec.rgbButtons[0] == 128)
+                {
+                    StartCoroutine(engine.StartEngine());
+                }
+            }
+            
         }
         else
         {
@@ -150,6 +160,11 @@ public class CarInput : MonoBehaviour
             {
                 shifter.setGear(Gear.GearN);
             }
+            
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                StartCoroutine(engine.StartEngine());
+            }
         }
       
         var rotation = Vector3.zero;
@@ -162,6 +177,8 @@ public class CarInput : MonoBehaviour
 
     private void OnGUI()
     {
+        if (!debug) return;
+        
         _debugState = $"Device: {_deviceName}\n";
         _debugState += $"Steering: {steeringValue}\n";
         _debugState += $"Gas: {gasAxis}\n";
@@ -169,7 +186,7 @@ public class CarInput : MonoBehaviour
         _debugState += $"Clutch: {clutchPressed}\n";
         _debugState += $"Blinker Left: {blinkLeft}\n";
         _debugState += $"Blinker Right: {blinkRight}\n";
-        _debugState = GUI.TextArea(new Rect(10, 10, 180, 200), _debugState, 400);
+        _debugState = GUI.TextArea(new Rect(10, 10, 190, 200), _debugState, 400);
     }
 
     private static int Map(int value, int fromLow, int fromHigh, int toLow, int toHigh) 
