@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6cf643593b9fc1f4ea43ce0c5737855d
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: dda12f74ff9116a42b23482252b2c482, type: 3}
+  _instancesCopy:
+  - {fileID: 11400000, guid: 7080dc11a955f954db1ec4687b7ca935, type: 2}
+  _fileAsset: {instanceID: 0}
+  _assetPath: Assets/Textures/broken_asphalt_driveway_dirty.sbsar
