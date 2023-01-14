@@ -11,12 +11,10 @@ public class CarInput : MonoBehaviour
     public int steeringLock = 450;
     public int wheeloffset = 30;
     public GameObject steeringWheel;
-    public Gearbox shifter;
-    public Engine engine;
-    
-    public int steeringValue = 0;
-    public int gasAxis = 0;
-    public int brakeAxis = 0;
+
+    public float steeringValue = 0;
+    public float gasAxis = 0;
+    public float brakeAxis = 0;
     public bool clutchPressed = false;
     public bool blinkLeft = false;
     public bool blinkRight = false;
@@ -50,7 +48,7 @@ public class CarInput : MonoBehaviour
             // Check Steering
             {
                 // X-Axis pos -32767 -> +32768 (Full Lock)
-                steeringValue = Map(rec.lX, -32768, 32767, -steeringLock, steeringLock);
+                steeringValue = Mapf(rec.lX, -32768, 32767, -1, 1);
             }
         
             // Pedals
@@ -59,13 +57,13 @@ public class CarInput : MonoBehaviour
                 // Y-Axis pos
                 // +32767 = 0%
                 // -32768 = 100%
-                gasAxis = Map(-rec.lY, -32768, 32767, 0, 100);
+                gasAxis = Mapf(-rec.lY, -32768, 32767, 0, 1);
                 
                 // Brake
                 // Z-Axis rotation
                 // +32767 = 0%
                 // -32768 = 100%
-                brakeAxis = Map(-rec.lRz, -32768, 32767, 0, 100);
+                brakeAxis = Mapf(-rec.lRz, -32768, 32767, 0, 1);
                 
                 // Clutch
                 // Extra Axis pos 1
@@ -79,26 +77,26 @@ public class CarInput : MonoBehaviour
                 // Buttons 12-18 (1st - 6th - reverse)
                 if (rec.rgbButtons[12] == 128)
                 {
-                    shifter.setGear(Gear.Gear1);
+                    //shifter.setGear(Gear.Gear1);
                 } else if (rec.rgbButtons[13] == 128)
                 {
-                    shifter.setGear(Gear.Gear2);
+                    //shifter.setGear(Gear.Gear2);
                 } else if (rec.rgbButtons[14] == 128)
                 {
-                    shifter.setGear(Gear.Gear3);
+                    //shifter.setGear(Gear.Gear3);
                 } else if (rec.rgbButtons[15] == 128)
                 {
-                    shifter.setGear(Gear.Gear4);
+                    //shifter.setGear(Gear.Gear4);
                 } else if (rec.rgbButtons[16] == 128)
                 {
-                    shifter.setGear(Gear.Gear5);
+                    //shifter.setGear(Gear.Gear5);
                 } else if (rec.rgbButtons[18] == 128)
                 {
-                    shifter.setGear(Gear.GearR);
+                    //shifter.setGear(Gear.GearR);
                 }
                 else
                 {
-                    shifter.setGear(Gear.GearN);
+                    //shifter.setGear(Gear.GearN);
                 }
     
             }
@@ -116,7 +114,7 @@ public class CarInput : MonoBehaviour
             {
                 if (rec.rgbButtons[0] == 128)
                 {
-                    StartCoroutine(engine.StartEngine());
+                    //StartCoroutine(engine.StartEngine());
                 }
             }
             
@@ -124,9 +122,9 @@ public class CarInput : MonoBehaviour
         else
         {
             _deviceName   = "Fallback";
-            steeringValue = Convert.ToInt32(Input.GetAxis("Steering") * 450);
-            gasAxis       = Convert.ToInt32(Input.GetAxis("Gas") * 100);
-            brakeAxis     = Convert.ToInt32(Input.GetAxis("Brake") * 100);
+            steeringValue = Input.GetAxis("Steering");
+            gasAxis       = Input.GetAxis("Gas");
+            brakeAxis     = Input.GetAxis("Brake");
 
             clutchPressed = Input.GetKey(KeyCode.C);
             blinkLeft     = Input.GetKeyUp(KeyCode.Q);
@@ -134,45 +132,46 @@ public class CarInput : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.Alpha1))
             {
-                shifter.setGear(Gear.Gear1);
+                //shifter.setGear(Gear.Gear1);
             }
             else if (Input.GetKeyUp(KeyCode.Alpha2))
             {
-                shifter.setGear(Gear.Gear2);
+                //shifter.setGear(Gear.Gear2);
             } 
             else if (Input.GetKeyUp(KeyCode.Alpha3))
             {
-                shifter.setGear(Gear.Gear3);
+                //shifter.setGear(Gear.Gear3);
             } 
             else if (Input.GetKeyUp(KeyCode.Alpha4))
             {
-                shifter.setGear(Gear.Gear4);
+                //shifter.setGear(Gear.Gear4);
             } 
             else if (Input.GetKeyUp(KeyCode.Alpha5))
             {
-                shifter.setGear(Gear.Gear5);
+                //shifter.setGear(Gear.Gear5);
             }
             else if (Input.GetKeyUp(KeyCode.R))
             {
-                shifter.setGear(Gear.GearR);
+                //shifter.setGear(Gear.GearR);
             }
             else if (Input.GetKeyUp(KeyCode.N))
             {
-                shifter.setGear(Gear.GearN);
+                //shifter.setGear(Gear.GearN);
             }
             
             if (Input.GetKeyUp(KeyCode.Space))
             {
-                StartCoroutine(engine.StartEngine());
+                //StartCoroutine(engine.StartEngine());
             }
         }
       
         var rotation = Vector3.zero;
-        rotation.x = steeringValue + wheeloffset;
-        rotation.y = 0;
-        rotation.z = 0;
+        var eulerAngles = steeringWheel.transform.eulerAngles;
+
+        rotation.x = eulerAngles.x;
+        rotation.y = eulerAngles.y;
+        rotation.z = -steeringValue * steeringLock;
         steeringWheel.transform.eulerAngles = rotation;
-        
     }
 
     private void OnGUI()
@@ -190,6 +189,11 @@ public class CarInput : MonoBehaviour
     }
 
     private static int Map(int value, int fromLow, int fromHigh, int toLow, int toHigh) 
+    {
+        return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+    }
+    
+    private static float Mapf(float value, float fromLow, float fromHigh, float toLow, float toHigh) 
     {
         return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
     }
