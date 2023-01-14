@@ -45,13 +45,13 @@ static class GearMethods
     {
         return gear switch
         {
-            Gear.Gear1 => 0.9f,
-            Gear.Gear2 => 0.75f,
-            Gear.Gear3 => 0.6f,
-            Gear.Gear4 => 0.45f,
-            Gear.Gear5 => 0.3f,
+            Gear.Gear1 => 3.2f,
+            Gear.Gear2 => 1.9f,
+            Gear.Gear3 => 1.33f,
+            Gear.Gear4 => 1,
+            Gear.Gear5 => 0.814f,
             Gear.GearN => 2,
-            Gear.GearR => 1,
+            Gear.GearR => -3.2f,
             _ => 1
         };
     }

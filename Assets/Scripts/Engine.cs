@@ -8,33 +8,35 @@ public class Engine : MonoBehaviour
     public Gearbox gearBox;
     public AudioSource source;
     public AudioClip start, idle, startNoGear, stall;
+  
+    public AnimationCurve torqueCurve;
+    
     
     // Change of RPM at max throttle (per second)
-    public int MaxRPMAccel = 4000;
-    public int Redline = 7500;
-
+    public int maxRPMAccel = 4000;
+    public int redline = 7200;
+    
     public bool running
     {
         get { return _running; }
     }
     private bool _running = false;
-    private float rpm = 0;
+    private float _rpm = 0;
+
+    public float Rpm => _rpm;
 
     private void Update()
     {
         if (!_running) return;
-        
-        var throttle = input.gasAxis;
-
-        //float targetRpm = Map((float)throttle, 0f, 100f, 1000f, Redline * 1.25f);
+        var throttle = input.gasAxis * 100;
         
         float rpmDiff;
-        if (throttle > 0)
+        if (throttle > 1)
         {
-            rpmDiff = MaxRPMAccel * (throttle / 100f) * Time.deltaTime;
+            rpmDiff = maxRPMAccel * (throttle / 100f) * Time.deltaTime;
             if (!input.clutchPressed)
             {
-                rpmDiff *= gearBox.getCurrentGear().Factor();
+                rpmDiff *= gearBox.GetCurrentGear().Factor();
             }
             else
             {
@@ -43,25 +45,20 @@ public class Engine : MonoBehaviour
         }
         else
         {
-            if ((input.clutchPressed || gearBox.getCurrentGear() == Gear.GearN))
+            if ((input.clutchPressed || gearBox.GetCurrentGear() == Gear.GearN))
             {
-                rpmDiff = -MaxRPMAccel * Time.deltaTime;
+                rpmDiff = -maxRPMAccel * Time.deltaTime;
             }
             else
             {
-                rpmDiff = -MaxRPMAccel * Time.deltaTime * 0.1f;
+                rpmDiff = -maxRPMAccel * Time.deltaTime * 0.4f;
             }
             
         }
         
-        rpm = Mathf.Max(Mathf.Min(rpm + rpmDiff, Redline), 1000);
-        source.pitch = Map(rpm, 1000, Redline, 1, 5);
-        source.volume = Map(rpm, 1000, Redline, 0.6f, 1f);
-    }
-
-    public float GetRPM()
-    {
-        return rpm;
+        _rpm = Mathf.Max(Mathf.Min(_rpm + rpmDiff, redline), 1000);
+        source.pitch = Math.Mapf(_rpm, 1000, redline, 1, 5);
+        source.volume = Math.Mapf(_rpm, 1000, redline, 0.6f, 1f);
     }
 
     public IEnumerator StartEngine()
@@ -72,12 +69,12 @@ public class Engine : MonoBehaviour
         source.pitch = 1;
         source.loop = false;
         
-        if (input.clutchPressed || gearBox.getCurrentGear() == Gear.GearN)
+        if (input.clutchPressed || gearBox.GetCurrentGear() == Gear.GearN)
         {            
             source.clip = start;
             source.Play();
             yield return new WaitForSeconds(source.clip.length);
-            rpm = 1000;
+            _rpm = 1000;
             _running = true;
             source.clip = idle;
             source.loop = true;
@@ -99,11 +96,17 @@ public class Engine : MonoBehaviour
         source.loop   = false;
         source.Play();
         _running = false;
-        rpm = 0;
+        _rpm = 0;
     }
     
-    private static float Map(float value, float fromLow, float fromHigh, float toLow, float toHigh) 
+    public float GetTorque()
     {
-        return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+        if (_rpm == 0)
+        {
+            return 0;
+        }
+
+        return torqueCurve.Evaluate(Rpm);
+
     }
 }

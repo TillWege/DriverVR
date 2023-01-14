@@ -2,17 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Gearbox : MonoBehaviour
 {
     public GameObject gear1, gear2, gear3, gear4, gear5, gearR, gearN;
     public CarInput input;
     public Engine engine;
-    private Gear currentGear = Gear.GearN;
+    public float diffGearing = 4.1f;
+    
+    private Gear _currentGear = Gear.GearN;
 
-    public void setGear(Gear gear)
+    public void SetGear(Gear gear)
     {
-        if (currentGear == gear) return;
+        if (_currentGear == gear) return;
         if (engine.running && !input.clutchPressed)
         {
             engine.Stall();
@@ -26,16 +29,31 @@ public class Gearbox : MonoBehaviour
         gearR.SetActive(gear == Gear.GearR);
         gearN.SetActive(gear == Gear.GearN);
 
-        currentGear = gear;
+        _currentGear = gear;
     }
 
     private void Start()
     {
-        setGear(currentGear);
+        SetGear(_currentGear);
     }
 
-    public Gear getCurrentGear()
+    public Gear GetCurrentGear()
     {
-        return currentGear;
+        return _currentGear;
+    }
+
+    public float GetTorque()
+    {
+        if (_currentGear == Gear.GearN || input.clutchPressed)
+        {
+            return 0;
+        }
+        
+        return engine.GetTorque() * _currentGear.Factor() * diffGearing;
+    }
+
+    public float GetEffectiveRation()
+    {
+        return _currentGear.Factor() * diffGearing;
     }
 }

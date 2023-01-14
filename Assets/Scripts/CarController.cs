@@ -2,15 +2,24 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.Serialization;
+
+public class CarController : MonoBehaviour
+{
+    public List<AxleInfo> axleInfos; 
+    public float maxBrakeTorque;
+    public float maxSteeringAngle;
     
-public class CarController : MonoBehaviour {
-    public List<AxleInfo> axleInfos; // the information about each individual axle
-    public float maxMotorTorque; // maximum torque the motor can apply to wheel
-    public float maxSteeringAngle; // maximum steer angle the wheel can have
     public CarInput input;
-        
-    // finds the corresponding visual wheel
-    // correctly applies the transform
+    public Gearbox gearbox;
+    public Rigidbody rb;
+
+    private float _speed;
+    public float speed => _speed;
+
+
+
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
         if (collider.transform.childCount == 0) {
@@ -26,23 +35,39 @@ public class CarController : MonoBehaviour {
         visualWheel.transform.position = position;
         visualWheel.transform.rotation = rotation;
     }
-     
+
+    public void Start()
+    {
+        rb.centerOfMass = new Vector3 (0, -1, 0);
+    }
+
     public void FixedUpdate()
     {
-        //float motor = maxMotorTorque * Input.GetAxis("Vertical");
-        float motor = maxMotorTorque * (input.gasAxis - input.brakeAxis);
+        _speed = rb.velocity.magnitude;
+
+
+        float torque = gearbox.GetTorque();
         float steering = maxSteeringAngle * input.steeringValue;
-        
-        //float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
-     
+
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
                 axleInfo.leftWheel.steerAngle = steering;
                 axleInfo.rightWheel.steerAngle = steering;
             }
             if (axleInfo.motor) {
-                axleInfo.leftWheel.motorTorque = motor;
-                axleInfo.rightWheel.motorTorque = motor;
+                axleInfo.leftWheel.motorTorque = torque;
+                axleInfo.rightWheel.motorTorque = torque;
+            }
+            
+            if (input.brakeAxis > 0.1f)
+            {
+                axleInfo.rightWheel.brakeTorque = maxBrakeTorque * input.brakeAxis; 
+                axleInfo.leftWheel.brakeTorque = maxBrakeTorque * input.brakeAxis;
+            }
+            else
+            {
+                axleInfo.rightWheel.brakeTorque = 0;
+                axleInfo.leftWheel.brakeTorque = 0;
             }
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
@@ -56,6 +81,6 @@ public class AxleInfo
     public String name;
     public WheelCollider leftWheel;
     public WheelCollider rightWheel;
-    public bool motor; // is this wheel attached to motor?
-    public bool steering; // does this wheel apply steer angle?
+    public bool motor;
+    public bool steering;
 }
