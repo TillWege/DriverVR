@@ -39,14 +39,15 @@ public class Debugger : MonoBehaviour
         
         if (engineDebug)
         {
-            _engineDebug = $"RPM: {engine.Rpm}\n";
+            _engineDebug = $"RPM: {engine.GetEffectiveRPM()}\n";
             _engineDebug += $"Engine torque: {engine.GetTorque()}\n";
             _engineDebug = GUI.TextArea(new Rect(410, 10, 190, 200), _engineDebug, 400);
         }
         
         if (carDebug)
         {
-            _carDebug = $"Speed in kmh: {car.speed * 3.6f}\n";
+            _carDebug = $"Speed in kmh: {car.speed}\n";
+            _carDebug += $"Max Speed: {car.gearbox.GetCurrentGear().MaxSpeed()}";
             _carDebug = GUI.TextArea(new Rect(610, 10, 190, 200), _carDebug, 400);
         }
     }

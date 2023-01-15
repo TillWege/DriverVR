@@ -14,7 +14,7 @@ public class CarController : MonoBehaviour
     public CarInput input;
     public Gearbox gearbox;
     public Rigidbody rb;
-
+    
     private float _speed;
     public float speed => _speed;
 
@@ -45,10 +45,31 @@ public class CarController : MonoBehaviour
     {
         _speed = rb.velocity.magnitude;
 
+        float torque = 0;
+        float brake = 0;
+        if (_speed >= (gearbox.GetCurrentGear().MaxSpeed()))
+        {
+            torque = 0;
+        }
+        else
+        {
+            torque = gearbox.GetTorque();
+        }
 
-        float torque = gearbox.GetTorque();
+        if ((torque < 0.1f) && (_speed > 1f))
+        {
+            brake = maxBrakeTorque * 0.25f;
+        }
+        
+        if (input.brakeAxis > 0.1f)
+        {
+            brake = maxBrakeTorque * input.brakeAxis; 
+        }
+
+        Debug.Log("torque: " + torque);
+        Debug.Log("brake: " + brake);
+        
         float steering = maxSteeringAngle * input.steeringValue;
-
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
                 axleInfo.leftWheel.steerAngle = steering;
@@ -59,16 +80,9 @@ public class CarController : MonoBehaviour
                 axleInfo.rightWheel.motorTorque = torque;
             }
             
-            if (input.brakeAxis > 0.1f)
-            {
-                axleInfo.rightWheel.brakeTorque = maxBrakeTorque * input.brakeAxis; 
-                axleInfo.leftWheel.brakeTorque = maxBrakeTorque * input.brakeAxis;
-            }
-            else
-            {
-                axleInfo.rightWheel.brakeTorque = 0;
-                axleInfo.leftWheel.brakeTorque = 0;
-            }
+            axleInfo.rightWheel.brakeTorque = brake;
+            axleInfo.leftWheel.brakeTorque = brake;
+            
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
         }

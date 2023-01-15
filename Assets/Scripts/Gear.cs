@@ -45,13 +45,28 @@ static class GearMethods
     {
         return gear switch
         {
-            Gear.Gear1 => 3.2f,
-            Gear.Gear2 => 1.9f,
+            Gear.Gear1 => 1f,
+            Gear.Gear2 => 1f,
             Gear.Gear3 => 1.33f,
-            Gear.Gear4 => 1,
-            Gear.Gear5 => 0.814f,
+            Gear.Gear4 => 1.8f,
+            Gear.Gear5 => 2f,
             Gear.GearN => 2,
-            Gear.GearR => -3.2f,
+            Gear.GearR => -0.5f,
+            _ => 1
+        };
+    }
+
+    public static float MaxSpeed(this Gear gear)
+    {
+        return gear switch
+        {
+            Gear.Gear1 => 14f,
+            Gear.Gear2 => 20f,
+            Gear.Gear3 => 30f,
+            Gear.Gear4 => 35f,
+            Gear.Gear5 => 40f,
+            Gear.GearN => 0,
+            Gear.GearR => -8f,
             _ => 1
         };
     }

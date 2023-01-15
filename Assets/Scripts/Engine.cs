@@ -6,59 +6,26 @@ public class Engine : MonoBehaviour
 {
     public CarInput input;
     public Gearbox gearBox;
+    public CarController controller;
     public AudioSource source;
     public AudioClip start, idle, startNoGear, stall;
   
     public AnimationCurve torqueCurve;
-    
-    
-    // Change of RPM at max throttle (per second)
-    public int maxRPMAccel = 4000;
-    public int redline = 7200;
+    public float redline = 7500;
     
     public bool running
     {
         get { return _running; }
     }
     private bool _running = false;
-    private float _rpm = 0;
-
-    public float Rpm => _rpm;
 
     private void Update()
     {
         if (!_running) return;
-        var throttle = input.gasAxis * 100;
-        
-        float rpmDiff;
-        if (throttle > 1)
-        {
-            rpmDiff = maxRPMAccel * (throttle / 100f) * Time.deltaTime;
-            if (!input.clutchPressed)
-            {
-                rpmDiff *= gearBox.GetCurrentGear().Factor();
-            }
-            else
-            {
-                rpmDiff *= Gear.GearN.Factor();
-            }
-        }
-        else
-        {
-            if ((input.clutchPressed || gearBox.GetCurrentGear() == Gear.GearN))
-            {
-                rpmDiff = -maxRPMAccel * Time.deltaTime;
-            }
-            else
-            {
-                rpmDiff = -maxRPMAccel * Time.deltaTime * 0.4f;
-            }
-            
-        }
-        
-        _rpm = Mathf.Max(Mathf.Min(_rpm + rpmDiff, redline), 1000);
-        source.pitch = Math.Mapf(_rpm, 1000, redline, 1, 5);
-        source.volume = Math.Mapf(_rpm, 1000, redline, 0.6f, 1f);
+
+        var rpm = GetEffectiveRPM();
+        source.pitch = Math.Mapf(rpm, 1000, redline, 1, 5);
+        source.volume = Math.Mapf(rpm, 1000, redline, 0.6f, 1f);
     }
 
     public IEnumerator StartEngine()
@@ -74,7 +41,6 @@ public class Engine : MonoBehaviour
             source.clip = start;
             source.Play();
             yield return new WaitForSeconds(source.clip.length);
-            _rpm = 1000;
             _running = true;
             source.clip = idle;
             source.loop = true;
@@ -96,17 +62,34 @@ public class Engine : MonoBehaviour
         source.loop   = false;
         source.Play();
         _running = false;
-        _rpm = 0;
     }
     
     public float GetTorque()
     {
-        if (_rpm == 0)
+        if (!running)
         {
             return 0;
         }
 
-        return torqueCurve.Evaluate(Rpm);
+        var torque = torqueCurve.Evaluate(input.gasAxis * 100f);
+        return torqueCurve.Evaluate(torque) * 3;
+    }
 
+    public float GetEffectiveRPM()
+    {
+        if (input.clutchPressed || gearBox.GetCurrentGear() == Gear.GearN)
+        {
+            return 1000;
+        }
+        else
+        {
+            var speed = controller.speed;
+            var maxSpeed = gearBox.GetCurrentGear().MaxSpeed();
+            var percent = speed / maxSpeed;
+            Debug.Log(percent);
+            
+            return percent * redline;
+        }
+        
     }
 }
