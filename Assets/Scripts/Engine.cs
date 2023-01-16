@@ -77,7 +77,7 @@ public class Engine : MonoBehaviour
 
     public float GetEffectiveRPM()
     {
-        if (input.clutchPressed || gearBox.GetCurrentGear() == Gear.GearN)
+        if (gearBox.GetCurrentGear() == Gear.GearN || (controller.speed < 0.2f))
         {
             return 1000;
         }
@@ -86,7 +86,6 @@ public class Engine : MonoBehaviour
             var speed = controller.speed;
             var maxSpeed = gearBox.GetCurrentGear().MaxSpeed();
             var percent = speed / maxSpeed;
-            Debug.Log(percent);
             
             return percent * redline;
         }
