@@ -47,7 +47,7 @@ public class CarController : MonoBehaviour
 
         float torque = 0;
         float brake = 0;
-        if (_speed >= (gearbox.GetCurrentGear().MaxSpeed()))
+        if ((gearbox.GetCurrentGear() != Gear.GearR) &&(_speed >= (gearbox.GetCurrentGear().MaxSpeed())))
         {
             torque = 0;
         }

@@ -51,7 +51,7 @@ static class GearMethods
             Gear.Gear4 => 1.8f,
             Gear.Gear5 => 2f,
             Gear.GearN => 2,
-            Gear.GearR => -0.5f,
+            Gear.GearR => -1f,
             _ => 1
         };
     }
