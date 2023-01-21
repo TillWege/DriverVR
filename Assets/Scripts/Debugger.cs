@@ -25,8 +25,8 @@ public class Debugger : MonoBehaviour
             _inputDebug += $"Gas: {input.gasAxis}\n";
             _inputDebug += $"Brake: {input.brakeAxis}\n";
             _inputDebug += $"Clutch: {input.clutchPressed}\n";
-            _inputDebug += $"Blinker Left: {input.blinkLeft}\n";
-            _inputDebug += $"Blinker Right: {input.blinkRight}\n";
+            _inputDebug += $"Blinker Left: {input.blinkingLeft}\n";
+            _inputDebug += $"Blinker Right: {input.blinkingRight}\n";
             _inputDebug = GUI.TextArea(new Rect(10, 10, 190, 200), _inputDebug, 400);
         }
 
@@ -47,7 +47,7 @@ public class Debugger : MonoBehaviour
         
         if (carDebug)
         {
-            _carDebug = $"Speed in kmh: {car.speed}\n";
+            _carDebug = $"Speed in kmh: {car.Speed}\n";
             _carDebug += $"Max Speed: {car.gearbox.GetCurrentGear().MaxSpeed()}";
             _carDebug = GUI.TextArea(new Rect(610, 10, 190, 200), _carDebug, 400);
         }

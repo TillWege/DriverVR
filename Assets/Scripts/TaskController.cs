@@ -10,11 +10,14 @@ public class TaskController : MonoBehaviour
     public List<Task> OpenTasks => _openTasks;
     public List<Task> CompletedTasks => _completedTasks;
     
+    private int _ShiftingTaskProgress = 0;
+
     void Start()
     {
         foreach (Task task in System.Enum.GetValues(typeof(Task)))
         {
-            _openTasks.Add(task);
+            if (task is not Task.NoneTask)
+                _openTasks.Add(task);
         }
     }
 
@@ -23,6 +26,22 @@ public class TaskController : MonoBehaviour
         // remove task from openTasks
         _openTasks.Remove(task);
         // add task to completedTasks
-        _completedTasks.Add(task);
+        if (!_completedTasks.Contains(task))
+            _completedTasks.Add(task);
+    }
+    
+    public void IncreaseShiftingTaskProgress()
+    {
+        _ShiftingTaskProgress++;
+        FinishTask(Task.ShiftGearOnceTask);
+        if (_ShiftingTaskProgress == 5)
+        {
+            FinishTask(Task.ShiftGearFiveTimesTask);
+        }
+    }
+    
+    public void ResetShiftingTaskProgress()
+    {
+        _ShiftingTaskProgress = 0;
     }
 }

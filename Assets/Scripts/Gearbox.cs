@@ -29,6 +29,11 @@ public class Gearbox : MonoBehaviour
         gear5.SetActive(gear == Gear.Gear5);
         gearR.SetActive(gear == Gear.GearR);
         gearN.SetActive(gear == Gear.GearN);
+        
+        if (engine.running  && gear != Gear.GearN)
+        {
+            taskController.IncreaseShiftingTaskProgress();
+        }
 
         _currentGear = gear;
     }

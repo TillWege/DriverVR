@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CarInput : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class CarInput : MonoBehaviour
     public GameObject steeringWheel;
     public Engine engine;
     public Gearbox gearbox;
+    public CarController controller;
 
     public int steeringLock = 450;
     public string deviceName;
@@ -17,8 +19,8 @@ public class CarInput : MonoBehaviour
     public float gasAxis = 0;
     public float brakeAxis = 0;
     public bool clutchPressed = false;
-    public bool blinkLeft = false;
-    public bool blinkRight = false;
+    public bool blinkingLeft = false;
+    public bool blinkingRight = false;
     
 
     void Start()
@@ -103,10 +105,16 @@ public class CarInput : MonoBehaviour
             // Check Blinker
             {
                 // btn 7 = left
-                blinkLeft = rec.rgbButtons[7] == 128;
-
+                if (rec.rgbButtons[7] == 128)
+                {
+                    controller.BlinkLeft();
+                }
+                
                 // btn 6 = right
-                blinkRight = rec.rgbButtons[6] == 128;
+                if (rec.rgbButtons[6] == 128)
+                {
+                    controller.BlinkRight();
+                }
             }
             
             // Start-Button
@@ -126,8 +134,17 @@ public class CarInput : MonoBehaviour
             brakeAxis     = Input.GetAxis("Brake");
 
             clutchPressed = Input.GetKey(KeyCode.C);
-            blinkLeft     = Input.GetKeyUp(KeyCode.Q);
-            blinkRight    = Input.GetKeyUp(KeyCode.E);
+            
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                controller.BlinkLeft();
+            }
+            
+            if (Input.GetKeyUp(KeyCode.E))
+            {
+                controller.BlinkRight();
+            }
+            
 
             if (Input.GetKeyUp(KeyCode.Alpha1))
             {
@@ -172,7 +189,4 @@ public class CarInput : MonoBehaviour
         rotation.z = -steeringValue * steeringLock;
         steeringWheel.transform.eulerAngles = rotation;
     }
-
-
-
 }

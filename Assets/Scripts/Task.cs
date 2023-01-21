@@ -1,13 +1,15 @@
 ﻿public enum Task
 {
+    NoneTask,
     StartEngineTask,
     StartDrivingTask,
-    BlinkBeforeTurnTask,
     TurnLeftTask,
     TurnRightTask,
+    CrossIntersectionTask,
+    CrossStopSignIntersectionTask,
     ShiftGearOnceTask,
     ShiftGearFiveTimesTask,
-    StopAtStopSignTask,
+    ReachHillHouseTask,
 }
 
 static class TaskMethods
@@ -17,13 +19,14 @@ static class TaskMethods
         return task switch
         {
             Task.StartEngineTask => "Start the engine",
-            Task.StartDrivingTask => "Start driving",
-            Task.BlinkBeforeTurnTask => "Blink before turning",
-            Task.TurnLeftTask => "Turn left",
-            Task.TurnRightTask => "Turn right",
+            Task.StartDrivingTask => "Start driving", 
+            Task.TurnLeftTask => "Turn left at an intersection, including setting the correct Blinker",
+            Task.TurnRightTask => "Turn right at an intersection, including setting the correct Blinker",
+            Task.CrossIntersectionTask => "Safely cross Straight any intersection",
+            Task.CrossStopSignIntersectionTask => "Safely cross an intersection with a Stop Sign",
             Task.ShiftGearOnceTask => "Change your gear without Stalling",
             Task.ShiftGearFiveTimesTask => "Change your gear without Stalling 5 times in a Row",
-            Task.StopAtStopSignTask => "Stop at stop sign",
+            Task.ReachHillHouseTask => "Reach the house on the hill",
             _ => "Unknown task"
         };
     }

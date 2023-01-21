@@ -64,6 +64,8 @@ public class Engine : MonoBehaviour
         source.loop   = false;
         source.Play();
         _running = false;
+        
+        taskController.ResetShiftingTaskProgress();
     }
     
     public float GetTorque()
@@ -79,13 +81,13 @@ public class Engine : MonoBehaviour
 
     public float GetEffectiveRPM()
     {
-        if (gearBox.GetCurrentGear() == Gear.GearN || (controller.speed < 0.2f))
+        if (gearBox.GetCurrentGear() == Gear.GearN || (controller.Speed < 0.2f))
         {
             return 1000;
         }
         else
         {
-            var speed = controller.speed;
+            var speed = controller.Speed;
             var maxSpeed = gearBox.GetCurrentGear().MaxSpeed();
             var percent = speed / maxSpeed;
             
