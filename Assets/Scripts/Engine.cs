@@ -9,6 +9,7 @@ public class Engine : MonoBehaviour
     public CarController controller;
     public AudioSource source;
     public AudioClip start, idle, startNoGear, stall;
+    public TaskController taskController;
   
     public AnimationCurve torqueCurve;
     public float redline = 7500;
@@ -45,6 +46,7 @@ public class Engine : MonoBehaviour
             source.clip = idle;
             source.loop = true;
             source.Play();
+            taskController.FinishTask(Task.StartEngineTask);
         }
         else
         {

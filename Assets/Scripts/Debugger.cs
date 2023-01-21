@@ -5,17 +5,18 @@ using UnityEngine;
 
 public class Debugger : MonoBehaviour
 {
-    public bool engineDebug, gearboxDebug, inputDebug, carDebug;
+    public bool engineDebug, gearboxDebug, inputDebug, carDebug, taskDebug;
     public Gearbox gearbox;
     public Engine engine;
     public CarInput input;
     public CarController car;
+    public TaskController taskController;
     
-    private string _engineDebug, _gearboxDebug, _inputDebug, _carDebug;
+    private string _engineDebug, _gearboxDebug, _inputDebug, _carDebug, _taskDebug;
 
     private void OnGUI()
     {
-        if (!(engineDebug || gearboxDebug || inputDebug|| carDebug)) return;
+        if (!(engineDebug || gearboxDebug || inputDebug|| carDebug || taskDebug)) return;
         
         if (inputDebug)
         {
@@ -49,6 +50,17 @@ public class Debugger : MonoBehaviour
             _carDebug = $"Speed in kmh: {car.speed}\n";
             _carDebug += $"Max Speed: {car.gearbox.GetCurrentGear().MaxSpeed()}";
             _carDebug = GUI.TextArea(new Rect(610, 10, 190, 200), _carDebug, 400);
+        }
+
+        if (taskDebug)
+        {
+            _taskDebug = $"Open Tasks: {taskController.OpenTasks.Count}\n";
+            _taskDebug += $"Completed Tasks: {taskController.CompletedTasks.Count}\n";
+            for (int i = 0; i < taskController.OpenTasks.Count; i++)
+            {
+                _taskDebug += $"{taskController.OpenTasks[i].GetDescription()}\n";
+            }
+            _taskDebug = GUI.TextArea(new Rect(810, 10, 190, 200), _taskDebug, 400);
         }
     }
 }

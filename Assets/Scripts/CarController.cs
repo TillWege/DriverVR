@@ -14,6 +14,7 @@ public class CarController : MonoBehaviour
     public CarInput input;
     public Gearbox gearbox;
     public Rigidbody rb;
+    public TaskController taskController;
     
     private float _speed;
     public float speed => _speed;

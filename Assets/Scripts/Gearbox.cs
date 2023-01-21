@@ -9,6 +9,7 @@ public class Gearbox : MonoBehaviour
     public GameObject gear1, gear2, gear3, gear4, gear5, gearR, gearN;
     public CarInput input;
     public Engine engine;
+    public TaskController taskController;
     public float diffGearing = 4.1f;
     
     private Gear _currentGear = Gear.GearN;
