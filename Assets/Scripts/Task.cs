@@ -11,6 +11,7 @@
     ShiftGearFiveTimesTask,
     ReachHillHouseTask,
     ActivateHazardsTask,
+    LightsAtNightTask,
 }
 
 static class TaskMethods
@@ -28,7 +29,8 @@ static class TaskMethods
             Task.ShiftGearOnceTask => "Change your gear without Stalling",
             Task.ShiftGearFiveTimesTask => "Change your gear without Stalling 5 times in a Row",
             Task.ReachHillHouseTask => "Reach the house on the hill",
-            Task.ActivateHazardsTask => "Activate the Hazards",
+            Task.ActivateHazardsTask => "Test your while standing still Hazards",
+            Task.LightsAtNightTask => "Use your Lights at night",
             _ => "Unknown task"
         };
     }

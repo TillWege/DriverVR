@@ -13,6 +13,7 @@ public class LightController : MonoBehaviour
     public Light backLeftBlinker;
     public Light backRightBlinker;
     public AudioSource source;
+    public GameObject leftBlinkerArrow, rightBlinkerArrow;
     
     private IEnumerator _leftBlinkerRoutine;
     private IEnumerator _rightBlinkerRoutine;
@@ -25,6 +26,8 @@ public class LightController : MonoBehaviour
         frontRightBlinker.enabled = false;
         backLeftBlinker.enabled = false;
         backRightBlinker.enabled = false;
+        leftBlinkerArrow.SetActive(false);
+        rightBlinkerArrow.SetActive(false);
     }
     
     public void SetHeadlights(bool headlights)
@@ -84,6 +87,7 @@ public class LightController : MonoBehaviour
         {
             frontLeftBlinker.enabled = !frontLeftBlinker.enabled;
             backLeftBlinker.enabled = !backLeftBlinker.enabled;
+            leftBlinkerArrow.SetActive(backLeftBlinker.enabled);
             source.Play();
             yield return waitTime;
         }
@@ -96,6 +100,7 @@ public class LightController : MonoBehaviour
         {
             frontRightBlinker.enabled = !frontRightBlinker.enabled;
             backRightBlinker.enabled = !backRightBlinker.enabled;
+            rightBlinkerArrow.SetActive(backRightBlinker.enabled);
             source.Play();
             yield return waitTime;
         }

@@ -16,6 +16,8 @@ public class CarController : MonoBehaviour
     public Rigidbody rb;
     public TaskController taskController;
     public LightController lights;
+    public TextMesh speedometer;
+    public WorldController worldController;
 
     private bool _blinkingLeft = false;
     public bool blinkingLeft => _blinkingLeft;
@@ -85,6 +87,8 @@ public class CarController : MonoBehaviour
     {
         _headlights = !_headlights;
         lights.SetHeadlights(_headlights);
+        if (worldController.CurrentTime == WorldTime.Night)
+            taskController.FinishTask(Task.LightsAtNightTask);
     }
     
     public void ToggleLeftBlinker()
@@ -123,6 +127,8 @@ public class CarController : MonoBehaviour
                 }
             }
         }
+        
+        speedometer.text = $"{(int)_speed * 2.5} km/h";
 
         float torque = 0;
         float brake = 0;
@@ -168,7 +174,11 @@ public class CarController : MonoBehaviour
     {
         _hazardLights = !_hazardLights;
         lights.SetHazards(_hazardLights);
-        taskController.FinishTask(Task.ActivateHazardsTask);
+        
+        if (_speed < 0.1f)
+        {
+            taskController.FinishTask(Task.ActivateHazardsTask);
+        }
     }
 }
     

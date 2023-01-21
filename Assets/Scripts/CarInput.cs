@@ -12,6 +12,7 @@ public class CarInput : MonoBehaviour
     public Engine engine;
     public Gearbox gearbox;
     public CarController controller;
+    public WorldController worldController;
 
     public int steeringLock = 450;
     public string deviceName;
@@ -179,6 +180,12 @@ public class CarInput : MonoBehaviour
             } else if (Input.GetKeyUp(KeyCode.B))
             {
                 controller.ToggleHazardLights();
+            } else if (Input.GetKeyUp(KeyCode.L))
+            {   
+                worldController.ToggleTime();
+            } else if (Input.GetKeyUp(KeyCode.K))
+            {
+                worldController.ToggleRain();
             }
 
             if (Input.GetKeyUp(KeyCode.Space))

@@ -10,6 +10,7 @@ public class Engine : MonoBehaviour
     public AudioSource source;
     public AudioClip start, idle, startNoGear, stall;
     public TaskController taskController;
+    public TextMesh rpmText;
   
     public AnimationCurve torqueCurve;
     public float redline = 7500;
@@ -22,11 +23,18 @@ public class Engine : MonoBehaviour
 
     private void Update()
     {
-        if (!_running) return;
+        if (!_running)
+        {
+            rpmText.text = $"0 rpm";
+        }
+        else
+        {
+            var rpm = GetEffectiveRPM();
+            rpmText.text = $"{rpm} rpm";
+            source.pitch = Math.Mapf(rpm, 1000, redline, 1, 5);
+            source.volume = Math.Mapf(rpm, 1000, redline, 0.6f, 1f);
+        }
 
-        var rpm = GetEffectiveRPM();
-        source.pitch = Math.Mapf(rpm, 1000, redline, 1, 5);
-        source.volume = Math.Mapf(rpm, 1000, redline, 0.6f, 1f);
     }
 
     public IEnumerator StartEngine()
