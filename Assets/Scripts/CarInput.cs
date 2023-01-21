@@ -173,8 +173,14 @@ public class CarInput : MonoBehaviour
             else if (Input.GetKeyUp(KeyCode.N))
             {
                 gearbox.SetGear(Gear.GearN);
+            } else if (Input.GetKeyUp(KeyCode.H))
+            {
+                controller.ToggleHeadlights();
+            } else if (Input.GetKeyUp(KeyCode.B))
+            {
+                controller.ToggleHazardLights();
             }
-            
+
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 StartCoroutine(engine.StartEngine());

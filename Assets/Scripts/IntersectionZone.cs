@@ -20,21 +20,41 @@ public class IntersectionZone : MonoBehaviour
     private bool _playerStoppedAtStopSign = false;
     private bool _playerActivatedLeftBlinker = false;
     private bool _playerActivatedRightBlinker = false;
+    
+    private CarController _player;
 
     private void Start()
     {
         _tasksToBeCompletedOnEntry = new List<Task>();
+    }
+    
+    private void Update()
+    {
+        if (_player is null) return;
+        
+        if (_player.blinkingLeft)
+        {
+            _playerActivatedLeftBlinker = true;
+        }
+            
+        if (_player.blinkingRight)
+        {
+            _playerActivatedRightBlinker = true;
+        }
+
     }
 
     public void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Car")) return;
         
+        _player = other.GetComponent<CarController>();
+        
         if (_tasksToBeCompletedOnEntry.Count > 0)
         {
             foreach (var task in _tasksToBeCompletedOnEntry)
             {
-                other.GetComponent<CarController>().taskController.FinishTask(task);
+                _player.taskController.FinishTask(task);
             }
             
             _tasksToBeCompletedOnEntry.Clear();
@@ -82,6 +102,7 @@ public class IntersectionZone : MonoBehaviour
         _playerStoppedAtStopSign     = false;
         _playerActivatedLeftBlinker  = false;
         _playerActivatedRightBlinker = false;
+        _player = null;
         isOccupied = false;
     }
     

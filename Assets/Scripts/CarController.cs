@@ -15,7 +15,15 @@ public class CarController : MonoBehaviour
     public Gearbox gearbox;
     public Rigidbody rb;
     public TaskController taskController;
+    public LightController lights;
 
+    private bool _blinkingLeft = false;
+    public bool blinkingLeft => _blinkingLeft;
+    private bool _blinkingRight = false;
+    public bool blinkingRight => _blinkingRight;
+    private bool _headlights = false;
+    private bool _hazardLights = false;
+    
     private IntersectionZone _currentZone;
     public IntersectionZone CurrentZone => _currentZone;
     private float _speed;
@@ -63,13 +71,38 @@ public class CarController : MonoBehaviour
 
     public void BlinkLeft()
     {
-        _currentZone?.SetPlayerActivatedLeftBlinker(true);
+        _blinkingLeft = !_blinkingLeft;
+        lights.SetLeftBlinker(_blinkingLeft);
     }
     
     public void BlinkRight()
     {
-        Debug.Log("aaa");
-        _currentZone?.SetPlayerActivatedRightBlinker(true);
+        _blinkingRight = !_blinkingRight;
+        lights.SetRightBlinker(_blinkingRight);
+    }
+
+    public void Headlights()
+    {
+        _headlights = !_headlights;
+        lights.SetHeadlights(_headlights);
+    }
+    
+    public void ToggleLeftBlinker()
+    {
+        _blinkingLeft = !_blinkingLeft;
+        lights.SetLeftBlinker(_blinkingLeft);
+    }
+    
+    public void ToggleRightBlinker()
+    {
+        _blinkingRight = !_blinkingRight;
+        lights.SetRightBlinker(_blinkingRight);
+    }
+    
+    public void ToggleHeadlights()
+    {
+        _headlights = !_headlights;
+        lights.SetHeadlights(_headlights);
     }
     
     public void FixedUpdate()
@@ -129,6 +162,13 @@ public class CarController : MonoBehaviour
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
         }
+    }
+
+    public void ToggleHazardLights()
+    {
+        _hazardLights = !_hazardLights;
+        lights.SetHazards(_hazardLights);
+        taskController.FinishTask(Task.ActivateHazardsTask);
     }
 }
     
