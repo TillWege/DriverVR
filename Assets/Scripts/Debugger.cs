@@ -12,7 +12,7 @@ public class Debugger : MonoBehaviour
     public CarController car;
     public TaskController taskController;
     
-    private string _engineDebug, _gearboxDebug, _inputDebug, _carDebug, _taskDebug;
+    private string _engineDebug, _gearboxDebug, _inputDebug, _carDebug, _taskDebug, _comptaskDebug;
 
     private void OnGUI()
     {
@@ -61,6 +61,13 @@ public class Debugger : MonoBehaviour
                 _taskDebug += $"{taskController.OpenTasks[i].GetDescription()}\n";
             }
             _taskDebug = GUI.TextArea(new Rect(810, 10, 190, 200), _taskDebug, 400);
+            
+            _comptaskDebug = $"Completed Tasks: {taskController.CompletedTasks.Count}\n";
+            for (int i = 0; i < taskController.CompletedTasks.Count; i++)
+            {
+                _comptaskDebug += $"{taskController.CompletedTasks[i].GetDescription()}\n";
+            }
+            _comptaskDebug = GUI.TextArea(new Rect(1010, 10, 190, 200), _comptaskDebug, 400);
         }
     }
 }
