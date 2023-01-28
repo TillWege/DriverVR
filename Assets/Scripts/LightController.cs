@@ -36,7 +36,7 @@ public class LightController : MonoBehaviour
         light2.enabled = headlights;
     }
     
-    public void SetLeftBlinker(bool leftBlinker)
+    public void SetLeftBlinker(bool leftBlinker, bool deactivateRight = true)
     {
         if (!leftBlinker)
         {
@@ -46,16 +46,18 @@ public class LightController : MonoBehaviour
             }
             frontLeftBlinker.enabled = false;
             backLeftBlinker.enabled = false;
+            leftBlinkerArrow.SetActive(false);
         }
         else
         {
             _leftBlinkerRoutine = LeftBlinkerRoutine();
             StartCoroutine(_leftBlinkerRoutine);
-            SetRightBlinker(false);
+            if(deactivateRight)
+                SetRightBlinker(false);
         }
     }
 
-    public void SetRightBlinker(bool rightBlinker)
+    public void SetRightBlinker(bool rightBlinker, bool deactivateLeft = true)
     {
         if (!rightBlinker)
         {
@@ -65,19 +67,21 @@ public class LightController : MonoBehaviour
             }
             frontRightBlinker.enabled = false;
             backRightBlinker.enabled = false;
+            rightBlinkerArrow.SetActive(false);
         }
         else
         {
             _rightBlinkerRoutine = RightBlinkerRoutine();
             StartCoroutine(_rightBlinkerRoutine);
-            SetLeftBlinker(false);
+            if(deactivateLeft)
+                SetLeftBlinker(false);
         }
     }
     
     public void SetHazards(bool hazards)
     {
-        SetLeftBlinker(hazards);
-        SetRightBlinker(hazards);
+        SetLeftBlinker(hazards, false);
+        SetRightBlinker(hazards, false);
     }
     
     private IEnumerator LeftBlinkerRoutine()
