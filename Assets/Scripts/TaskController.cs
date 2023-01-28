@@ -6,6 +6,7 @@ public class TaskController : MonoBehaviour
 {
     private readonly List<Task> _openTasks = new List<Task>();
     private readonly List<Task> _completedTasks = new List<Task>();
+    public TextMesh taskText;
 
     public List<Task> OpenTasks => _openTasks;
     public List<Task> CompletedTasks => _completedTasks;
@@ -19,6 +20,7 @@ public class TaskController : MonoBehaviour
             if (task is not Task.NoneTask)
                 _openTasks.Add(task);
         }
+        UpdateTaskText();
     }
 
     public void FinishTask(Task task)
@@ -28,6 +30,8 @@ public class TaskController : MonoBehaviour
         // add task to completedTasks
         if (!_completedTasks.Contains(task))
             _completedTasks.Add(task);
+
+        UpdateTaskText();
     }
     
     public void IncreaseShiftingTaskProgress()
@@ -43,5 +47,17 @@ public class TaskController : MonoBehaviour
     public void ResetShiftingTaskProgress()
     {
         _ShiftingTaskProgress = 0;
+    }
+    
+    private void UpdateTaskText()
+    {
+        if (_openTasks.Count > 0)
+        {
+            taskText.text = _openTasks[0].GetDescription();
+        }
+        else
+        {
+            taskText.text = "No tasks left!";
+        }
     }
 }
