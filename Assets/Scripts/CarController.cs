@@ -113,7 +113,7 @@ public class CarController : MonoBehaviour
     {
         _speed = rb.velocity.magnitude;
         
-        if (_speed > 0.1f)
+        if (_speed > 1f)
         {
             taskController.FinishTask(Task.StartDrivingTask);
         }
