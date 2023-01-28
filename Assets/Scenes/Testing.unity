@@ -2165,7 +2165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16fb956d7d121034b881d570c54cd292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskText: {fileID: 1739161333}
+  taskText: {fileID: 1336326412}
 --- !u!1 &70655914
 GameObject:
   m_ObjectHideFlags: 0
@@ -35241,6 +35241,11 @@ PhysicMaterial:
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
+--- !u!102 &1336326412 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 3999625123239346539, guid: 1c199765dd03842498795bdf7b028444, type: 3}
+  m_PrefabInstance: {fileID: 1783257007}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1343587001 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 402f05925915bf54fb5a7857a3b28a6a, type: 3}
@@ -36314,11 +36319,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6113a5baa30a443a89a05ffe326e84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engineDebug: 0
-  gearboxDebug: 0
-  inputDebug: 0
-  carDebug: 0
-  taskDebug: 0
+  engineDebug: 1
+  gearboxDebug: 1
+  inputDebug: 1
+  carDebug: 1
+  taskDebug: 1
   gearbox: {fileID: 1200060030}
   engine: {fileID: 1200060029}
   input: {fileID: 1200060034}
@@ -46761,11 +46766,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!102 &1739161333 stripped
-TextMesh:
-  m_CorrespondingSourceObject: {fileID: 3999625123239346539, guid: 1c199765dd03842498795bdf7b028444, type: 3}
-  m_PrefabInstance: {fileID: 1783257007}
-  m_PrefabAsset: {fileID: 0}
 --- !u!134 &1741305203
 PhysicMaterial:
   m_ObjectHideFlags: 0
@@ -48196,10 +48196,6 @@ PrefabInstance:
       propertyPath: taskController
       value: 
       objectReference: {fileID: 64120701}
-    - target: {fileID: 2369863310950900297, guid: 1c199765dd03842498795bdf7b028444, type: 3}
-      propertyPath: inputType
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2369863310950900297, guid: 1c199765dd03842498795bdf7b028444, type: 3}
       propertyPath: controller
       value: 
